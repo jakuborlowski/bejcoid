@@ -1,18 +1,12 @@
-package com.example.bejcoid;
+package pl.bejc.bejcoid;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
-import android.accounts.AccountManagerCallback;
-import android.accounts.AccountManagerFuture;
-import android.accounts.AuthenticatorException;
-import android.accounts.OperationCanceledException;
-import android.content.Context;
+import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.Activity;
 import android.os.StrictMode;
 import android.provider.ContactsContract;
 import android.util.Log;
@@ -22,26 +16,18 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.auth.GoogleAuthException;
-import com.google.android.gms.auth.GoogleAuthUtil;
-
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
-import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends Activity {
 
@@ -52,14 +38,14 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        new AccessTokenTask().execute(this);
+
         AccountManager am = AccountManager.get(this); // "this" references the current Context
         Account[] accounts = am.getAccountsByType("com.google");
-
         TextView view = (TextView) findViewById(R.id.textView2);
         String name = accounts.length == 0 ? "brak" : accounts[0].name;
         view.setText(name);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -73,28 +59,33 @@ public class MainActivity extends Activity {
         startActivityForResult(intent, CONTACT_PICKER_RESULT);
     }
 
-    public void doAddDebt(View view) throws IOException, JSONException, GoogleAuthException {
+    public void doAddDebt(View view) throws IOException, JSONException {
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
-        EditText affiliateEditText = (EditText)findViewById(R.id.editText);
-        EditText amountEditText = (EditText)findViewById(R.id.editText2);
+        EditText affiliateEditText = (EditText)findViewById(R.id.affiliateTextArea);
+        EditText amountEditText = (EditText)findViewById(R.id.amountTextArea);
+        EditText descriptionEditText = (EditText)findViewById(R.id.descriptionTextArea);
 
-        AccountManager am = AccountManager.get(this);
-        Account [] accounts = am.getAccounts();
-        Account account = accounts[0];   // For me this is Google, still need to figure out how to get it by name.
-        String auth_token = GoogleAuthUtil.getToken(this, accounts[0].name, "oauth2:scope");
-
-        //ya29.AHES6ZQ0CL1PGV05V-Eqgkr26SiHk0v-0xyh6scFrf961Zuk2LsLzOVEVw
-        Log.i("bejc", "access_token: "+auth_token);
+        String access_token = getSharedPreferences("myPrefs", MODE_PRIVATE).getString("access_token", "null");
+        //"ya29.AHES6ZQ0CL1PGV05V-Eqgkr26SiHk0v-0xyh6scFrf961Zuk2LsLzOVEVw";
 
         JSONObject json = new JSONObject();
         json.put("amount", amountEditText.getText().toString());
         json.put("affiliate", affiliateEditText.getText().toString());
-        json.put("heOwesMe", 1);
+        json.put("description", descriptionEditText.getText().toString());
 
-        HttpPost httpPost = new HttpPost("http://staging.bejc.pl/api/google/addDebt/"+auth_token);
+        switch(view.getId()){
+            case R.id.heOwesMeButton:
+                json.put("heOwesMe", 1);
+                break;
+            case R.id.iOweHimButton:
+                json.put("iOweHim", 1);
+                break;
+        }
+
+        HttpPost httpPost = new HttpPost("http://staging.bejc.pl/api/google/addDebt/"+access_token);
         StringEntity entity = new StringEntity(json.toString(), HTTP.UTF_8);
         entity.setContentType("text/json");
         httpPost.setEntity(entity);
@@ -104,9 +95,13 @@ public class MainActivity extends Activity {
         // odczytanie odpowiedzi
         BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
         String jsonResponse = reader.readLine();
-        Toast.makeText(this, "ok?", Toast.LENGTH_LONG).show();
-        Log.i("bejc", "razel: " + response.getStatusLine().toString());
-        Log.i("bejc", "razel: " + jsonResponse);
+        Toast.makeText(this, response.getStatusLine().toString(), Toast.LENGTH_LONG).show();
+        Log.i("bejc", "code: " + response.getStatusLine().toString());
+        Log.i("bejc", "response: " + jsonResponse);
+
+        affiliateEditText.setText("");
+        amountEditText.setText("");
+        descriptionEditText.setText("");
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -123,12 +118,14 @@ public class MainActivity extends Activity {
                         email = cursor.getString(emailIdx);
                         Log.v("debug", "Got email: " + email);
                     }
-                    EditText emailEntry = (EditText)findViewById(R.id.editText);
+                    EditText emailEntry = (EditText)findViewById(R.id.affiliateTextArea);
                     emailEntry.setText(email);
                     if (email.length() == 0) {
                         Toast.makeText(this, "Wybrany kontakt nie posiada adresu email.", Toast.LENGTH_LONG).show();
                     }
 
+                    break;
+                case AccessTokenTask.USER_RECOVERABLE_AUTH_EXCEPTION:
                     break;
             }
         }

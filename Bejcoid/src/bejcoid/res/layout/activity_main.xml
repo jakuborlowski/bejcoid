@@ -27,7 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Odda / Oddałem"
-            android:id="@+id/button"
+            android:id="@+id/heOwesMeButton"
             android:background="#5ab45a"
             android:minWidth="150dp"
             android:layout_alignParentStart="false"
@@ -38,15 +38,16 @@
     <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Oddał / Oddam"
-            android:id="@+id/button2"
+            android:text="Oddam / Oddał"
+            android:id="@+id/iOweHimButton"
             android:background="#d44944"
             android:textColor="#FFFFFF"
             android:textColorHighlight="#000000"
             android:minWidth="150dp"
             android:layout_gravity="left"
-            android:layout_alignTop="@+id/button"
-            android:layout_toRightOf="@+id/textView2"/>
+            android:layout_alignTop="@+id/heOwesMeButton"
+            android:layout_alignParentRight="true"
+            android:onClick="doAddDebt"/>
 
     <TextView
             android:layout_width="wrap_content"
@@ -63,7 +64,7 @@
             android:layout_height="wrap_content"
             android:inputType="textEmailAddress"
             android:ems="10"
-            android:id="@+id/editText"
+            android:id="@+id/affiliateTextArea"
             android:layout_below="@+id/textView3"
             android:layout_alignParentLeft="true"
             android:layout_toLeftOf="@+id/button3"/>
@@ -73,8 +74,8 @@
             android:layout_height="wrap_content"
             android:text="kontakt"
             android:id="@+id/button3"
-            android:layout_alignBottom="@+id/editText"
-            android:layout_alignRight="@+id/button2"
+            android:layout_alignBottom="@+id/affiliateTextArea"
+            android:layout_alignRight="@+id/iOweHimButton"
             android:onClick="doLaunchContactPicker"/>
 
     <TextView
@@ -83,8 +84,8 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="Kwota"
             android:id="@+id/textView4"
-            android:layout_below="@+id/editText"
-            android:layout_alignLeft="@+id/editText"
+            android:layout_below="@+id/affiliateTextArea"
+            android:layout_alignLeft="@+id/affiliateTextArea"
             android:layout_marginTop="18dp"/>
 
     <EditText
@@ -92,9 +93,29 @@
             android:layout_height="wrap_content"
             android:inputType="numberDecimal"
             android:ems="10"
-            android:id="@+id/editText2"
+            android:id="@+id/amountTextArea"
             android:layout_below="@+id/textView4"
             android:layout_alignParentLeft="true"
             android:layout_alignRight="@+id/button3"/>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Opis"
+            android:id="@+id/textView5"
+            android:layout_below="@+id/amountTextArea"
+            android:layout_alignLeft="@+id/amountTextArea"
+            android:layout_marginTop="10dp"/>
+
+    <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"
+            android:ems="10"
+            android:id="@+id/descriptionTextArea"
+            android:layout_below="@+id/textView5"
+            android:layout_alignParentLeft="true"
+            android:layout_alignRight="@+id/amountTextArea"/>
 
 </RelativeLayout>
