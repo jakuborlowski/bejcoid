@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name" >Bejc</string>
-    <string name="action_settings" >Ustawienia</string>
+    <string name="action_settings" >Zresetuj access_token</string>
     <string name="heOwesMe">Odda / Oddałem</string>
     <string name="iOweHim">Oddam / Oddał</string>
 

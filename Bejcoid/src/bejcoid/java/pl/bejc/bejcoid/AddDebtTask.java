@@ -29,7 +29,7 @@ public class AddDebtTask extends AsyncTask<JSONObject, Void, HttpResponse> {
         try {
             JSONObject json = jsons[0];
             HttpPost httpPost = null;
-            httpPost = new HttpPost("http://staging.bejc.pl/api/google/addDebt");
+            httpPost = new HttpPost("http://staging.bejc.pl/api/1/debt/add");
             StringEntity entity = null;
             entity = new StringEntity(jsons[0].toString(), HTTP.UTF_8);
             entity.setContentType("text/json");
@@ -60,8 +60,12 @@ public class AddDebtTask extends AsyncTask<JSONObject, Void, HttpResponse> {
 
             switch (response.getStatusLine().getStatusCode()) {
                 case 401:
-                    mainActivity.renewToken();
+                    Toast.makeText(mainActivity, "brak użytkownika lub nieprawidłowy token", Toast.LENGTH_LONG).show();
+                    //mainActivity.renewToken();
                     break;
+                case 400:
+                    Toast.makeText(mainActivity, "formularz zawiera błędy", Toast.LENGTH_LONG).show();
+                    mainActivity.unlockInterface();
                 case 200:
                     mainActivity.resetTextAreas();
                     mainActivity.unlockInterface();

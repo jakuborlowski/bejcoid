@@ -11,6 +11,7 @@ import android.os.StrictMode;
 import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -35,8 +36,9 @@ public class MainActivity extends Activity {
     }
 
     private void prepareAccountName() {
-        AccountManager am = AccountManager.get(this); // "this" references the current Context
-        Account[] accounts = am.getAccountsByType("com.google");
+        AccountManager accountManager = AccountManager.get(this);
+        assert accountManager != null;
+        Account[] accounts = accountManager.getAccountsByType("com.google");
         TextView view = (TextView) findViewById(R.id.textView2);
         String name = accounts.length == 0 ? "brak" : accounts[0].name;
         view.setText(name);
@@ -61,10 +63,10 @@ public class MainActivity extends Activity {
 
         JSONObject json = new JSONObject();
         json.put("access_token", getAccessToken());
-        json.put("amount", ((EditText)findViewById(R.id.amountTextArea)).getText().toString());
-        json.put("affiliate", ((EditText)findViewById(R.id.affiliateTextArea)).getText().toString());
-        json.put("description", ((EditText)findViewById(R.id.descriptionTextArea)).getText().toString());
-        switch(view.getId()){
+        json.put("amount", ((EditText) findViewById(R.id.amountTextArea)).getText().toString());
+        json.put("affiliate", ((EditText) findViewById(R.id.affiliateTextArea)).getText().toString());
+        json.put("description", ((EditText) findViewById(R.id.descriptionTextArea)).getText().toString());
+        switch (view.getId()) {
             case R.id.heOwesMeButton:
                 json.put("heOwesMe", 1);
                 break;
@@ -90,7 +92,7 @@ public class MainActivity extends Activity {
                         email = cursor.getString(emailIdx);
                         Log.v("debug", "Got email: " + email);
                     }
-                    EditText emailEntry = (EditText)findViewById(R.id.affiliateTextArea);
+                    EditText emailEntry = (EditText) findViewById(R.id.affiliateTextArea);
                     emailEntry.setText(email);
                     if (email.length() == 0) {
                         Toast.makeText(this, "Wybrany kontakt nie posiada adresu email.", Toast.LENGTH_LONG).show();
@@ -101,6 +103,18 @@ public class MainActivity extends Activity {
                     loadAccessToken();
                     break;
             }
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.renew_access_token:
+                renewToken();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 
@@ -141,9 +155,9 @@ public class MainActivity extends Activity {
     }
 
     public void resetTextAreas() {
-        ((TextView)findViewById(R.id.affiliateTextArea)).setText("");
-        ((TextView)findViewById(R.id.amountTextArea)).setText("");
-        ((TextView)findViewById(R.id.descriptionTextArea)).setText("");
+        ((TextView) findViewById(R.id.affiliateTextArea)).setText("");
+        ((TextView) findViewById(R.id.amountTextArea)).setText("");
+        ((TextView) findViewById(R.id.descriptionTextArea)).setText("");
         findViewById(R.id.affiliateTextArea).setFocusableInTouchMode(true);
         findViewById(R.id.affiliateTextArea).requestFocus();
     }
