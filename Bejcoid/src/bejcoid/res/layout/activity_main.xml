@@ -23,31 +23,6 @@
             android:layout_alignParentTop="true"
             android:layout_toRightOf="@+id/textView"/>
 
-    <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Odda / Oddałem"
-            android:id="@+id/heOwesMeButton"
-            android:background="#5ab45a"
-            android:minWidth="150dp"
-            android:layout_alignParentStart="false"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:onClick="doAddDebt"/>
-
-    <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Oddam / Oddał"
-            android:id="@+id/iOweHimButton"
-            android:background="#d44944"
-            android:textColor="#FFFFFF"
-            android:textColorHighlight="#000000"
-            android:minWidth="150dp"
-            android:layout_gravity="left"
-            android:layout_alignTop="@+id/heOwesMeButton"
-            android:layout_alignParentRight="true"
-            android:onClick="doAddDebt"/>
 
     <TextView
             android:layout_width="wrap_content"
@@ -74,9 +49,9 @@
             android:layout_height="wrap_content"
             android:text="kontakt"
             android:id="@+id/button3"
-            android:layout_alignBottom="@+id/affiliateTextArea"
-            android:layout_alignRight="@+id/iOweHimButton"
-            android:onClick="doLaunchContactPicker"/>
+            android:onClick="doLaunchContactPicker"
+            android:layout_above="@+id/textView4"
+            android:layout_alignRight="@+id/amountTextArea"/>
 
     <TextView
             android:layout_width="wrap_content"
@@ -96,7 +71,7 @@
             android:id="@+id/amountTextArea"
             android:layout_below="@+id/textView4"
             android:layout_alignParentLeft="true"
-            android:layout_alignRight="@+id/button3"/>
+            android:layout_alignRight="@+id/descriptionTextArea"/>
 
     <TextView
             android:layout_width="wrap_content"
@@ -116,6 +91,51 @@
             android:id="@+id/descriptionTextArea"
             android:layout_below="@+id/textView5"
             android:layout_alignParentLeft="true"
-            android:layout_alignRight="@+id/amountTextArea"/>
+            android:layout_alignRight="@+id/tableLayout"/>
+
+    <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:id="@+id/tableLayout">
+
+        <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
+
+            <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/heOwesMe"
+                    android:id="@+id/heOwesMeButton"
+                    android:background="#5ab45a"
+                    android:onClick="doAddDebt"
+                    android:layout_weight=".10"/>
+
+            <RelativeLayout
+                    android:layout_weight=".10"/>
+
+            <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/iOweHim"
+                    android:id="@+id/iOweHimButton"
+                    android:background="#d44944"
+                    android:textColor="#FFFFFF"
+                    android:textColorHighlight="#000000"
+                    android:onClick="doAddDebt"
+                    android:layout_weight=".10"/>
+        </TableRow>
+
+
+    </TableLayout>
+
+    <ProgressBar
+            style="?android:attr/progressBarStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tokenProgressBar"
+            android:layout_alignTop="@+id/textView2"
+            android:layout_alignRight="@+id/button3"/>
 
 </RelativeLayout>

@@ -16,18 +16,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.protocol.HTTP;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 
 public class MainActivity extends Activity {
 
@@ -38,8 +30,11 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        new AccessTokenTask().execute(this);
+        loadAccessToken();
+        prepareAccountName();
+    }
 
+    private void prepareAccountName() {
         AccountManager am = AccountManager.get(this); // "this" references the current Context
         Account[] accounts = am.getAccountsByType("com.google");
         TextView view = (TextView) findViewById(R.id.textView2);
@@ -64,18 +59,11 @@ public class MainActivity extends Activity {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
-        EditText affiliateEditText = (EditText)findViewById(R.id.affiliateTextArea);
-        EditText amountEditText = (EditText)findViewById(R.id.amountTextArea);
-        EditText descriptionEditText = (EditText)findViewById(R.id.descriptionTextArea);
-
-        String access_token = getSharedPreferences("myPrefs", MODE_PRIVATE).getString("access_token", "null");
-        //"ya29.AHES6ZQ0CL1PGV05V-Eqgkr26SiHk0v-0xyh6scFrf961Zuk2LsLzOVEVw";
-
         JSONObject json = new JSONObject();
-        json.put("amount", amountEditText.getText().toString());
-        json.put("affiliate", affiliateEditText.getText().toString());
-        json.put("description", descriptionEditText.getText().toString());
-
+        json.put("access_token", getAccessToken());
+        json.put("amount", ((EditText)findViewById(R.id.amountTextArea)).getText().toString());
+        json.put("affiliate", ((EditText)findViewById(R.id.affiliateTextArea)).getText().toString());
+        json.put("description", ((EditText)findViewById(R.id.descriptionTextArea)).getText().toString());
         switch(view.getId()){
             case R.id.heOwesMeButton:
                 json.put("heOwesMe", 1);
@@ -85,23 +73,7 @@ public class MainActivity extends Activity {
                 break;
         }
 
-        HttpPost httpPost = new HttpPost("http://staging.bejc.pl/api/google/addDebt/"+access_token);
-        StringEntity entity = new StringEntity(json.toString(), HTTP.UTF_8);
-        entity.setContentType("text/json");
-        httpPost.setEntity(entity);
-        HttpClient client = new DefaultHttpClient();
-        HttpResponse response = client.execute(httpPost);
-
-        // odczytanie odpowiedzi
-        BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
-        String jsonResponse = reader.readLine();
-        Toast.makeText(this, response.getStatusLine().toString(), Toast.LENGTH_LONG).show();
-        Log.i("bejc", "code: " + response.getStatusLine().toString());
-        Log.i("bejc", "response: " + jsonResponse);
-
-        affiliateEditText.setText("");
-        amountEditText.setText("");
-        descriptionEditText.setText("");
+        new AddDebtTask(this).execute(json);
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -126,9 +98,54 @@ public class MainActivity extends Activity {
 
                     break;
                 case AccessTokenTask.USER_RECOVERABLE_AUTH_EXCEPTION:
+                    loadAccessToken();
                     break;
             }
         }
+    }
+
+    public void lockInterface() {
+        findViewById(R.id.tokenProgressBar).setVisibility(View.VISIBLE);
+        findViewById(R.id.iOweHimButton).setClickable(false);
+        findViewById(R.id.iOweHimButton).setBackgroundColor(0xFF333333);
+        findViewById(R.id.heOwesMeButton).setClickable(false);
+        findViewById(R.id.heOwesMeButton).setBackgroundColor(0xFF333333);
+        findViewById(R.id.affiliateTextArea).setEnabled(false);
+        findViewById(R.id.amountTextArea).setEnabled(false);
+        findViewById(R.id.descriptionTextArea).setEnabled(false);
+    }
+
+    public void unlockInterface() {
+        findViewById(R.id.tokenProgressBar).setVisibility(View.GONE);
+        findViewById(R.id.iOweHimButton).setClickable(true);
+        findViewById(R.id.iOweHimButton).setBackgroundColor(0xFFD44944);
+        findViewById(R.id.heOwesMeButton).setClickable(true);
+        findViewById(R.id.heOwesMeButton).setBackgroundColor(0xFF5AB45A);
+        findViewById(R.id.affiliateTextArea).setEnabled(true);
+        findViewById(R.id.amountTextArea).setEnabled(true);
+        findViewById(R.id.descriptionTextArea).setEnabled(true);
+    }
+
+    public void renewToken() {
+        AccountManager.get(this).invalidateAuthToken("com.google", getAccessToken());
+        loadAccessToken();
+    }
+
+    private void loadAccessToken() {
+        lockInterface();
+        new AccessTokenTask(this).execute();
+    }
+
+    public String getAccessToken() {
+        return getSharedPreferences("myPrefs", MODE_MULTI_PROCESS).getString("access_token", "null");
+    }
+
+    public void resetTextAreas() {
+        ((TextView)findViewById(R.id.affiliateTextArea)).setText("");
+        ((TextView)findViewById(R.id.amountTextArea)).setText("");
+        ((TextView)findViewById(R.id.descriptionTextArea)).setText("");
+        findViewById(R.id.affiliateTextArea).setFocusableInTouchMode(true);
+        findViewById(R.id.affiliateTextArea).requestFocus();
     }
 
 }
