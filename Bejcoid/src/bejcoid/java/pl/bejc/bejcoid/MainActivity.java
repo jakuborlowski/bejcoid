@@ -21,10 +21,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.List;
 
 public class MainActivity extends Activity {
 
     private static final int CONTACT_PICKER_RESULT = 1001;
+
+    public List<String> affiliates;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,17 +35,29 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         loadAccessToken();
-        prepareAccountName();
+        //prepareAccountName();
     }
 
-    private void prepareAccountName() {
-        AccountManager accountManager = AccountManager.get(this);
-        assert accountManager != null;
-        Account[] accounts = accountManager.getAccountsByType("com.google");
-        TextView view = (TextView) findViewById(R.id.textView2);
-        String name = accounts.length == 0 ? "brak" : accounts[0].name;
-        view.setText(name);
+    public void accessTokenReadyCallback(String accessToken) {
+        new LoadAffiliatesTask(this, accessToken).execute();
     }
+
+    public void loadAffiliatesListCallback(List<String> affiliates) {
+        this.affiliates = affiliates;
+        findViewById(R.id.affiliatesProgressBar).setVisibility(View.GONE);
+        for (String affiliate : affiliates) {
+            new DrawAffiliateTask(this).execute(affiliate);
+        }
+    }
+
+//    private void prepareAccountName() {
+//        AccountManager accountManager = AccountManager.get(this);
+//        assert accountManager != null;
+//        Account[] accounts = accountManager.getAccountsByType("com.google");
+//        TextView view = (TextView) findViewById(R.id.textView2);
+//        String name = accounts.length == 0 ? "brak" : accounts[0].name;
+//        view.setText(name);
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

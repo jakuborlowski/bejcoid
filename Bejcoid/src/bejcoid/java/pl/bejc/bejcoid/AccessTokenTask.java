@@ -47,16 +47,17 @@ public class AccessTokenTask extends AsyncTask<Void, Void, String> {
     }
 
     @Override
-    protected void onPostExecute(String access_token) {
+    protected void onPostExecute(String accessToken) {
 
         SharedPreferences preferences = activity.getSharedPreferences("myPrefs", activity.MODE_MULTI_PROCESS);
         SharedPreferences.Editor editor = preferences.edit();
         editor.clear();
-        editor.putString("access_token", access_token);
+        editor.putString("access_token", accessToken);
         editor.commit();
 
-        Log.i("bejc", "access_token: " + access_token);
+        Log.i("bejc", "access_token: " + accessToken);
 
         activity.unlockInterface();
+        activity.accessTokenReadyCallback(accessToken);
     }
 }
