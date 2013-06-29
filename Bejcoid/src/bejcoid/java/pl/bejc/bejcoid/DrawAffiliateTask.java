@@ -28,7 +28,7 @@ public class DrawAffiliateTask extends AsyncTask<String, Void, ImageView> {
     public void onPreExecute() {
         progressBar = new ProgressBar(activity.getApplicationContext(), null, android.R.attr.progressBarStyleSmall);
         placeholder = new LinearLayout(activity.getApplicationContext());
-        placeholder.setLayoutParams(new LinearLayout.LayoutParams(100, 100));
+        placeholder.setLayoutParams(new LinearLayout.LayoutParams(dp2px(50), dp2px(50)));
         placeholder.setGravity(Gravity.CENTER);
         placeholder.setPadding(0, 0, 10, 0);
         placeholder.addView(progressBar);
@@ -52,10 +52,10 @@ public class DrawAffiliateTask extends AsyncTask<String, Void, ImageView> {
         ImageView imageView = new ImageView(activity.getApplicationContext());
 
         try {
-            URL url = new URL("http://www.gravatar.com/avatar/" + md5(email) + "?s=100&default=monsterid");
+            URL url = new URL("http://www.gravatar.com/avatar/" + md5(email) + "?s=" + dp2px(50) + "&default=monsterid");
             Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
 
-            imageView.setLayoutParams(new LinearLayout.LayoutParams(100, 100));
+            imageView.setLayoutParams(new LinearLayout.LayoutParams(dp2px(50), dp2px(50)));
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             imageView.setImageBitmap(bmp);
             imageView.setOnClickListener(new View.OnClickListener() {
@@ -92,5 +92,9 @@ public class DrawAffiliateTask extends AsyncTask<String, Void, ImageView> {
             e.printStackTrace();
         }
         return "";
+    }
+
+    private Integer dp2px(Integer px) {
+        return px * ((Double)Math.floor(activity.getResources().getDisplayMetrics().density)).intValue();
     }
 }
