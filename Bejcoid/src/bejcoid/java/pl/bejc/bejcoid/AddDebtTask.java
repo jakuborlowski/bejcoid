@@ -17,10 +17,10 @@ import java.io.InputStreamReader;
 
 public class AddDebtTask extends AsyncTask<JSONObject, Void, HttpResponse> {
 
-    private MainActivity mainActivity;
+    private MainActivity activity;
 
     public AddDebtTask(MainActivity paramMainActivity) {
-        mainActivity = paramMainActivity;
+        activity = paramMainActivity;
     }
 
     @Override
@@ -46,7 +46,8 @@ public class AddDebtTask extends AsyncTask<JSONObject, Void, HttpResponse> {
     }
 
     protected void onPreExecute() {
-        mainActivity.lockInterface();
+        activity.lockInterface();
+        activity.markNetActivity();
     }
 
     @Override
@@ -54,28 +55,30 @@ public class AddDebtTask extends AsyncTask<JSONObject, Void, HttpResponse> {
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
             String jsonResponse = reader.readLine();
-            Toast.makeText(mainActivity, response.getStatusLine().toString(), Toast.LENGTH_LONG).show();
+            Toast.makeText(activity, "Dodano zobowiązanie", Toast.LENGTH_LONG).show();
             Log.i("bejc", "code: " + response.getStatusLine().toString());
             Log.i("bejc", "response: " + jsonResponse);
 
             switch (response.getStatusLine().getStatusCode()) {
                 case 401:
-                    Toast.makeText(mainActivity, "brak użytkownika lub nieprawidłowy token", Toast.LENGTH_LONG).show();
-                    //mainActivity.renewToken();
+                    Toast.makeText(activity, "brak użytkownika lub nieprawidłowy token", Toast.LENGTH_LONG).show();
+                    //activity.renewToken();
                     break;
                 case 400:
-                    Toast.makeText(mainActivity, "formularz zawiera błędy", Toast.LENGTH_LONG).show();
-                    mainActivity.unlockInterface();
+                    Toast.makeText(activity, "formularz zawiera błędy", Toast.LENGTH_LONG).show();
+                    activity.unlockInterface();
                 case 200:
-                    mainActivity.resetTextAreas();
-                    mainActivity.unlockInterface();
+                    activity.resetTextAreas();
+                    activity.unlockInterface();
                     break;
                 default:
-                    mainActivity.unlockInterface();
+                    activity.unlockInterface();
             }
 
         } catch (Exception e) {
             Log.e("bejc", e.getClass() + ": " + e.getMessage());
         }
+
+        activity.unmarkNetActivity();
     }
 }

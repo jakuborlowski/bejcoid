@@ -27,8 +27,13 @@ public class LoadAffiliatesTask extends AsyncTask<Void, Void, List<String>> {
         accessToken = paramAccessToken;
     }
 
+    public void onPreExecute() {
+        activity.markNetActivity();
+    }
+
     public void onPostExecute(List<String> affiliates) {
         activity.loadAffiliatesListCallback(affiliates);
+        activity.unmarkNetActivity();
     }
 
     @Override

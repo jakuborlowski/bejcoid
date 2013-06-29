@@ -44,6 +44,7 @@ public class AccessTokenTask extends AsyncTask<Void, Void, String> {
 
     protected void onPreExecute() {
         activity.lockInterface();
+        activity.markNetActivity();
     }
 
     @Override
@@ -58,6 +59,7 @@ public class AccessTokenTask extends AsyncTask<Void, Void, String> {
         Log.i("bejc", "access_token: " + accessToken);
 
         activity.unlockInterface();
+        activity.unmarkNetActivity();
         activity.accessTokenReadyCallback(accessToken);
     }
 }

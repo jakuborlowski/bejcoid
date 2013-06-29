@@ -13,7 +13,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,14 +30,15 @@ public class MainActivity extends Activity {
     private static final int CONTACT_PICKER_RESULT = 1001;
 
     public List<String> affiliates;
+    private Integer netActivity = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.activity_main);
 
         loadAccessToken();
-        //prepareAccountName();
     }
 
     public void accessTokenReadyCallback(String accessToken) {
@@ -44,7 +47,7 @@ public class MainActivity extends Activity {
 
     public void loadAffiliatesListCallback(List<String> affiliates) {
         this.affiliates = affiliates;
-        findViewById(R.id.affiliatesProgressBar).setVisibility(View.GONE);
+        ((LinearLayout) findViewById(R.id.affiliates)).removeAllViews();
         for (String affiliate : affiliates) {
             new DrawAffiliateTask(this).execute(affiliate);
         }
@@ -133,8 +136,21 @@ public class MainActivity extends Activity {
         }
     }
 
+    public void markNetActivity() {
+        netActivity++;
+        if(netActivity == 1) {
+            setProgressBarIndeterminateVisibility(true);
+        }
+    }
+
+    public void unmarkNetActivity() {
+        netActivity--;
+        if(netActivity == 0) {
+            setProgressBarIndeterminateVisibility(false);
+        }
+    }
+
     public void lockInterface() {
-        findViewById(R.id.tokenProgressBar).setVisibility(View.VISIBLE);
         findViewById(R.id.iOweHimButton).setClickable(false);
         findViewById(R.id.iOweHimButton).setBackgroundColor(0xFF333333);
         findViewById(R.id.heOwesMeButton).setClickable(false);
@@ -145,7 +161,6 @@ public class MainActivity extends Activity {
     }
 
     public void unlockInterface() {
-        findViewById(R.id.tokenProgressBar).setVisibility(View.GONE);
         findViewById(R.id.iOweHimButton).setClickable(true);
         findViewById(R.id.iOweHimButton).setBackgroundColor(0xFFD44944);
         findViewById(R.id.heOwesMeButton).setClickable(true);

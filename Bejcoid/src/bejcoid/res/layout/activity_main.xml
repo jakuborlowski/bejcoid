@@ -15,8 +15,8 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="Znajomy"
             android:id="@+id/textView3"
-            android:layout_alignParentLeft="true"
-            android:layout_marginTop="15dp"/>
+            android:layout_alignParentTop="true"
+            android:layout_alignLeft="@+id/affiliateTextArea"/>
 
     <EditText
             android:layout_width="wrap_content"
@@ -113,13 +113,6 @@
 
     </TableLayout>
 
-    <ProgressBar
-            style="?android:attr/progressBarStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/tokenProgressBar"
-            android:layout_alignRight="@+id/tableLayout"/>
-
     <HorizontalScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -135,24 +128,16 @@
                 android:orientation="horizontal" />
     </HorizontalScrollView>
 
-    <ProgressBar
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/affiliatesProgressBar"
-            android:layout_alignTop="@+id/horizontalScrollView"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="5px"
-            android:layout_gravity="center"/>
-
     <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/imageView"
             android:layout_alignParentEnd="false"
-            android:background="@drawable/address_book"
+            android:background="@drawable/address_book_blue"
             android:onClick="doLaunchContactPicker"
             android:layout_above="@+id/horizontalScrollView"
-            android:layout_alignParentRight="true"/>
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="4px"/>
 
 
 </RelativeLayout>
