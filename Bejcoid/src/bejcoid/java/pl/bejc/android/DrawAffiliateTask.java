@@ -1,4 +1,4 @@
-package pl.bejc.bejcoid;
+package pl.bejc.android;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

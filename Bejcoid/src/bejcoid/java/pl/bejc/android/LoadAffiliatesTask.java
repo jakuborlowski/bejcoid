@@ -1,4 +1,4 @@
-package pl.bejc.bejcoid;
+package pl.bejc.android;
 
 import android.os.AsyncTask;
 import android.util.Log;
@@ -16,6 +16,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+
+import pl.bejc.android.R;
 
 public class LoadAffiliatesTask extends AsyncTask<Void, Void, List<String>> {
 
@@ -59,7 +61,7 @@ public class LoadAffiliatesTask extends AsyncTask<Void, Void, List<String>> {
     }
 
     private HttpResponse queryAffiliatesApi() throws IOException {
-        HttpGet httpGet = new HttpGet("http://staging.bejc.pl/api/1/user/affiliates");
+        HttpGet httpGet = new HttpGet(activity.getResources().getString(R.string.api_url)+"/api/1/user/affiliates");
         httpGet.setHeader("Bejc-Authentication-Provider", "google");
         httpGet.setHeader("Bejc-Authentication-Token", accessToken);
         HttpClient client = new DefaultHttpClient();

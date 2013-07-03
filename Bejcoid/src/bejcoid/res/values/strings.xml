@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="api_url" >https://bejc.herokuapp.com</string>
     <string name="app_name" >Bejc</string>
     <string name="action_settings" >Zresetuj access_token</string>
     <string name="heOwesMe">Odda / Oddałem</string>

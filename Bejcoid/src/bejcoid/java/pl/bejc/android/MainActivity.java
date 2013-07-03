@@ -1,4 +1,4 @@
-package pl.bejc.bejcoid;
+package pl.bejc.android;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
