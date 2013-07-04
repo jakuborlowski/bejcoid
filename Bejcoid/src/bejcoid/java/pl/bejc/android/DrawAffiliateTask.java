@@ -1,8 +1,10 @@
 package pl.bejc.android;
 
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -94,7 +96,10 @@ public class DrawAffiliateTask extends AsyncTask<String, Void, ImageView> {
         return "";
     }
 
-    private Integer dp2px(Integer px) {
-        return px * ((Double)Math.floor(activity.getResources().getDisplayMetrics().density)).intValue();
+    private Integer dp2px(Integer dp) {
+        Resources resources = activity.getResources();
+        DisplayMetrics metrics = resources.getDisplayMetrics();
+        float px = dp * (metrics.densityDpi / 160f);
+        return Math.round(px);
     }
 }
