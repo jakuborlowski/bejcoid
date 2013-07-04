@@ -30,9 +30,9 @@ public class DrawAffiliateTask extends AsyncTask<String, Void, ImageView> {
     public void onPreExecute() {
         progressBar = new ProgressBar(activity.getApplicationContext(), null, android.R.attr.progressBarStyleSmall);
         placeholder = new LinearLayout(activity.getApplicationContext());
-        placeholder.setLayoutParams(new LinearLayout.LayoutParams(dp2px(50), dp2px(50)));
+        placeholder.setLayoutParams(new LinearLayout.LayoutParams(dp2px(55), dp2px(50)));
         placeholder.setGravity(Gravity.CENTER);
-        placeholder.setPadding(0, 0, 10, 0);
+        placeholder.setPadding(0, 0, dp2px(5), 0);
         placeholder.addView(progressBar);
         ((LinearLayout) activity.findViewById(R.id.affiliates)).addView(placeholder);
     }
