@@ -17,16 +17,14 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import pl.bejc.android.R;
-
 public class LoadAffiliatesTask extends AsyncTask<Void, Void, List<String>> {
 
     private MainActivity activity;
     private String accessToken;
 
-    public LoadAffiliatesTask(MainActivity paramActivity, String paramAccessToken) {
+    public LoadAffiliatesTask(MainActivity paramActivity) {
         activity = paramActivity;
-        accessToken = paramAccessToken;
+        accessToken = activity.getAccessToken();
     }
 
     public void onPreExecute() {
@@ -61,7 +59,7 @@ public class LoadAffiliatesTask extends AsyncTask<Void, Void, List<String>> {
     }
 
     private HttpResponse queryAffiliatesApi() throws IOException {
-        HttpGet httpGet = new HttpGet(activity.getResources().getString(R.string.api_url)+"/api/1/user/affiliates");
+        HttpGet httpGet = new HttpGet(activity.getResources().getString(R.string.api_url) + "/api/1/user/affiliates");
         httpGet.setHeader("Bejc-Authentication-Provider", "google");
         httpGet.setHeader("Bejc-Authentication-Token", accessToken);
         HttpClient client = new DefaultHttpClient();

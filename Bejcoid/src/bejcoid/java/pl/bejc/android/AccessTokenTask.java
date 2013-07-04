@@ -50,7 +50,7 @@ public class AccessTokenTask extends AsyncTask<Void, Void, String> {
     @Override
     protected void onPostExecute(String accessToken) {
 
-        SharedPreferences preferences = activity.getSharedPreferences("myPrefs", activity.MODE_MULTI_PROCESS);
+        SharedPreferences preferences = activity.getSharedPreferences("main", activity.MODE_MULTI_PROCESS);
         SharedPreferences.Editor editor = preferences.edit();
         editor.clear();
         editor.putString("access_token", accessToken);
@@ -60,6 +60,6 @@ public class AccessTokenTask extends AsyncTask<Void, Void, String> {
 
         activity.unlockInterface();
         activity.unmarkNetActivity();
-        activity.accessTokenReadyCallback(accessToken);
+        activity.accessTokenReadyCallback();
     }
 }

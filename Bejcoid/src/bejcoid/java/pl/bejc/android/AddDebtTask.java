@@ -29,7 +29,7 @@ public class AddDebtTask extends AsyncTask<JSONObject, Void, HttpResponse> {
         try {
             JSONObject json = jsons[0];
             HttpPost httpPost = null;
-            httpPost = new HttpPost(activity.getResources().getString(R.string.api_url)+"/api/1/debt/add");
+            httpPost = new HttpPost(activity.getResources().getString(R.string.api_url) + "/api/1/debt/add");
             StringEntity entity = null;
             entity = new StringEntity(jsons[0].toString(), HTTP.UTF_8);
             entity.setContentType("text/json");

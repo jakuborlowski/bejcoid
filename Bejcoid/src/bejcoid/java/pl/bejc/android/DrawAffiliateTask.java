@@ -1,8 +1,6 @@
 package pl.bejc.android;
 
 import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -13,9 +11,10 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+
+import pl.polidea.webimageview.WebImageView;
 
 public class DrawAffiliateTask extends AsyncTask<String, Void, ImageView> {
 
@@ -28,19 +27,16 @@ public class DrawAffiliateTask extends AsyncTask<String, Void, ImageView> {
     }
 
     public void onPreExecute() {
-        progressBar = new ProgressBar(activity.getApplicationContext(), null, android.R.attr.progressBarStyleSmall);
         placeholder = new LinearLayout(activity.getApplicationContext());
         placeholder.setLayoutParams(new LinearLayout.LayoutParams(dp2px(55), dp2px(50)));
         placeholder.setGravity(Gravity.CENTER);
         placeholder.setPadding(0, 0, dp2px(5), 0);
-        placeholder.addView(progressBar);
         ((LinearLayout) activity.findViewById(R.id.affiliates)).addView(placeholder);
     }
 
     @Override
     protected void onPostExecute(ImageView view) {
         // add thumbnail view to the horizontal scroll
-        progressBar.setVisibility(View.GONE);
         placeholder.addView(view);
     }
 
@@ -50,16 +46,14 @@ public class DrawAffiliateTask extends AsyncTask<String, Void, ImageView> {
         return getAffiliateImageView(strings[0]);
     }
 
-    private ImageView getAffiliateImageView(final String email) {
-        ImageView imageView = new ImageView(activity.getApplicationContext());
+    private WebImageView getAffiliateImageView(final String email) {
+        WebImageView imageView = new WebImageView(activity.getApplicationContext());
+        imageView.setBackgroundColor(0xFFD0D0D0);
 
         try {
-            URL url = new URL("http://www.gravatar.com/avatar/" + md5(email) + "?s=" + dp2px(50) + "&default=monsterid");
-            Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-
             imageView.setLayoutParams(new LinearLayout.LayoutParams(dp2px(50), dp2px(50)));
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            imageView.setImageBitmap(bmp);
+            imageView.setImageURL("http://www.gravatar.com/avatar/" + md5(email) + "?s=" + dp2px(50) + "&default=monsterid");
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

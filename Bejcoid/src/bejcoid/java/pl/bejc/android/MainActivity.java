@@ -1,6 +1,5 @@
 package pl.bejc.android;
 
-import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.Activity;
 import android.content.Intent;
@@ -41,8 +40,8 @@ public class MainActivity extends Activity {
         loadAccessToken();
     }
 
-    public void accessTokenReadyCallback(String accessToken) {
-        new LoadAffiliatesTask(this, accessToken).execute();
+    public void accessTokenReadyCallback() {
+        new LoadAffiliatesTask(this).execute();
     }
 
     public void loadAffiliatesListCallback(List<String> affiliates) {
@@ -138,14 +137,14 @@ public class MainActivity extends Activity {
 
     public void markNetActivity() {
         netActivity++;
-        if(netActivity == 1) {
+        if (netActivity == 1) {
             setProgressBarIndeterminateVisibility(true);
         }
     }
 
     public void unmarkNetActivity() {
         netActivity--;
-        if(netActivity == 0) {
+        if (netActivity == 0) {
             setProgressBarIndeterminateVisibility(false);
         }
     }
@@ -172,16 +171,19 @@ public class MainActivity extends Activity {
 
     public void renewToken() {
         AccountManager.get(this).invalidateAuthToken("com.google", getAccessToken());
-        loadAccessToken();
-    }
-
-    private void loadAccessToken() {
-        lockInterface();
         new AccessTokenTask(this).execute();
     }
 
+    private void loadAccessToken() {
+        if (getAccessToken() == "null") {
+            new AccessTokenTask(this).execute();
+        } else {
+            accessTokenReadyCallback();
+        }
+    }
+
     public String getAccessToken() {
-        return getSharedPreferences("myPrefs", MODE_MULTI_PROCESS).getString("access_token", "null");
+        return getSharedPreferences("main", MODE_MULTI_PROCESS).getString("access_token", "null");
     }
 
     public void resetTextAreas() {
