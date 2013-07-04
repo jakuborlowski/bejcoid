@@ -36,7 +36,6 @@ public class DrawAffiliateTask extends AsyncTask<String, Void, ImageView> {
 
     @Override
     protected void onPostExecute(ImageView view) {
-        // add thumbnail view to the horizontal scroll
         placeholder.addView(view);
     }
 

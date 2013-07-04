@@ -52,18 +52,8 @@ public class MainActivity extends Activity {
         }
     }
 
-//    private void prepareAccountName() {
-//        AccountManager accountManager = AccountManager.get(this);
-//        assert accountManager != null;
-//        Account[] accounts = accountManager.getAccountsByType("com.google");
-//        TextView view = (TextView) findViewById(R.id.textView2);
-//        String name = accounts.length == 0 ? "brak" : accounts[0].name;
-//        view.setText(name);
-//    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
