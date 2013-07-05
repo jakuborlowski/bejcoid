@@ -17,45 +17,67 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LoadAffiliatesTask extends AsyncTask<Void, Void, List<String>> {
+public class LoadAffiliatesTask extends AsyncTask<Void, Void, Integer> {
+
+    private static final int LOAD_OK = 1;
+    private static final int LOAD_INVALID_TOKEN = 2;
+    private static final int LOAD_ERROR = 3;
 
     private MainActivity activity;
     private String accessToken;
+    List<String> affiliatesList;
 
     public LoadAffiliatesTask(MainActivity paramActivity) {
         activity = paramActivity;
         accessToken = activity.getAccessToken();
+        Log.i("bejc_load_affiliates", "access_token: " + accessToken);
     }
 
     public void onPreExecute() {
         activity.markNetActivity();
     }
 
-    public void onPostExecute(List<String> affiliates) {
-        activity.loadAffiliatesListCallback(affiliates);
+    public void onPostExecute(Integer result) {
+        switch (result) {
+            case LOAD_OK:
+                activity.loadAffiliatesListCallback(affiliatesList);
+                Log.i("bejc_load_affiliates", "ok");
+                break;
+            case LOAD_INVALID_TOKEN:
+                activity.renewToken();
+                Log.i("bejc_load_affiliates", "invoking token renewal");
+                break;
+            case LOAD_ERROR:
+                Log.e("bejc_load_affiliates", "not ok");
+                break;
+        }
+
         activity.unmarkNetActivity();
     }
 
     @Override
-    protected List<String> doInBackground(Void... voids) {
-        List<String> affiliatesList = new ArrayList<String>();
+    protected Integer doInBackground(Void... voids) {
 
         try {
+            affiliatesList = new ArrayList<String>();
             HttpResponse apiResponse = queryAffiliatesApi();
+
+            Log.i("bejc_load_affiliates", "API response code: " + apiResponse.getStatusLine().getStatusCode());
+
             switch (apiResponse.getStatusLine().getStatusCode()) {
                 case 200:
                     String content = convertStreamToString(apiResponse.getEntity().getContent());
-                    Log.i("bejc_draw_affiliates", "affiliates: " + content);
+                    Log.i("bejc_load_affiliates", "affiliates: " + content);
                     affiliatesList = getAffiliatesListFromJsonString(content);
-                    break;
-                default:
-                    Log.e("bejc_draw_affiliates", "API response code: " + apiResponse.getStatusLine().getStatusCode());
+                    return LOAD_OK;
+                case 401:
+                    return LOAD_INVALID_TOKEN;
             }
         } catch (Exception e) {
-            Log.e("bejc", e.getClass() + ": " + e.getMessage());
+            Log.e("bejc_load_affiliates", e.getClass() + ": " + e.getMessage());
         }
 
-        return affiliatesList;
+        return LOAD_ERROR;
     }
 
     private HttpResponse queryAffiliatesApi() throws IOException {

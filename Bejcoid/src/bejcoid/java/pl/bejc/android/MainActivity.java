@@ -160,12 +160,14 @@ public class MainActivity extends Activity {
     }
 
     public void renewToken() {
-        AccountManager.get(this).invalidateAuthToken("com.google", getAccessToken());
+        AccountManager accountManager = AccountManager.get(this);
+        assert accountManager != null;
+        accountManager.invalidateAuthToken("com.google", getAccessToken());
         new AccessTokenTask(this).execute();
     }
 
     private void loadAccessToken() {
-        if (getAccessToken() == "null") {
+        if (getAccessToken() == null) {
             new AccessTokenTask(this).execute();
         } else {
             accessTokenReadyCallback();
@@ -173,7 +175,7 @@ public class MainActivity extends Activity {
     }
 
     public String getAccessToken() {
-        return getSharedPreferences("main", MODE_MULTI_PROCESS).getString("access_token", "null");
+        return getSharedPreferences("main", MODE_PRIVATE).getString("access_token", null);
     }
 
     public void resetTextAreas() {

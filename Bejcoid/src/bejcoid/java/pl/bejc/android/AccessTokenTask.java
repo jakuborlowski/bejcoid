@@ -5,6 +5,7 @@ import android.accounts.AccountManager;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.UserRecoverableAuthException;
@@ -26,7 +27,7 @@ public class AccessTokenTask extends AsyncTask<Void, Void, String> {
 
         AccountManager accountManager = AccountManager.get(activity); // "this" references the current Context
         Account[] accounts = accountManager.getAccountsByType("com.google");
-        String access_token = "null";
+        String access_token = null;
 
         try {
             access_token = GoogleAuthUtil.getToken(activity, accounts[0].name, "oauth2:https://www.googleapis.com/auth/userinfo.email");
@@ -50,7 +51,7 @@ public class AccessTokenTask extends AsyncTask<Void, Void, String> {
     @Override
     protected void onPostExecute(String accessToken) {
 
-        SharedPreferences preferences = activity.getSharedPreferences("main", activity.MODE_MULTI_PROCESS);
+        SharedPreferences preferences = activity.getSharedPreferences("main", activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.clear();
         editor.putString("access_token", accessToken);
@@ -60,6 +61,12 @@ public class AccessTokenTask extends AsyncTask<Void, Void, String> {
 
         activity.unlockInterface();
         activity.unmarkNetActivity();
-        activity.accessTokenReadyCallback();
+
+        if(accessToken != null) {
+            activity.accessTokenReadyCallback();
+        }
+        else {
+            Toast.makeText(activity, "Błąd autoryzacji za pomocą konta Google", Toast.LENGTH_LONG).show();
+        }
     }
 }
