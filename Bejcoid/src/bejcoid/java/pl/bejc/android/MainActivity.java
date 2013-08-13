@@ -1,13 +1,14 @@
 package pl.bejc.android;
 
 import android.accounts.AccountManager;
-import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.provider.ContactsContract;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,18 +25,26 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.List;
 
-public class MainActivity extends Activity {
+public class MainActivity extends FragmentActivity {
 
     private static final int CONTACT_PICKER_RESULT = 1001;
 
     public List<String> affiliates;
     private Integer netActivity = 0;
 
+    SectionsPagerAdapter mSectionsPagerAdapter;
+    ViewPager mViewPager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+
         setContentView(R.layout.activity_main);
+
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        mViewPager = (ViewPager) findViewById(R.id.pager);
+        mViewPager.setAdapter(mSectionsPagerAdapter);
 
         loadAccessToken();
     }
@@ -140,23 +149,31 @@ public class MainActivity extends Activity {
     }
 
     public void lockInterface() {
-        findViewById(R.id.iOweHimButton).setClickable(false);
-        findViewById(R.id.iOweHimButton).setBackgroundColor(0xFF333333);
-        findViewById(R.id.heOwesMeButton).setClickable(false);
-        findViewById(R.id.heOwesMeButton).setBackgroundColor(0xFF333333);
-        findViewById(R.id.affiliateTextArea).setEnabled(false);
-        findViewById(R.id.amountTextArea).setEnabled(false);
-        findViewById(R.id.descriptionTextArea).setEnabled(false);
+        if(isViewReady()) {
+            findViewById(R.id.iOweHimButton).setClickable(false);
+            findViewById(R.id.iOweHimButton).setBackgroundColor(0xFF333333);
+            findViewById(R.id.heOwesMeButton).setClickable(false);
+            findViewById(R.id.heOwesMeButton).setBackgroundColor(0xFF333333);
+            findViewById(R.id.affiliateTextArea).setEnabled(false);
+            findViewById(R.id.amountTextArea).setEnabled(false);
+            findViewById(R.id.descriptionTextArea).setEnabled(false);
+        }
     }
 
     public void unlockInterface() {
-        findViewById(R.id.iOweHimButton).setClickable(true);
-        findViewById(R.id.iOweHimButton).setBackgroundColor(0xFFD44944);
-        findViewById(R.id.heOwesMeButton).setClickable(true);
-        findViewById(R.id.heOwesMeButton).setBackgroundColor(0xFF5AB45A);
-        findViewById(R.id.affiliateTextArea).setEnabled(true);
-        findViewById(R.id.amountTextArea).setEnabled(true);
-        findViewById(R.id.descriptionTextArea).setEnabled(true);
+        if(isViewReady()) {
+            findViewById(R.id.iOweHimButton).setClickable(true);
+            findViewById(R.id.iOweHimButton).setBackgroundColor(0xFFD44944);
+            findViewById(R.id.heOwesMeButton).setClickable(true);
+            findViewById(R.id.heOwesMeButton).setBackgroundColor(0xFF5AB45A);
+            findViewById(R.id.affiliateTextArea).setEnabled(true);
+            findViewById(R.id.amountTextArea).setEnabled(true);
+            findViewById(R.id.descriptionTextArea).setEnabled(true);
+        }
+    }
+
+    private boolean isViewReady() {
+        return findViewById(R.id.iOweHimButton) != null;
     }
 
     public void renewToken() {

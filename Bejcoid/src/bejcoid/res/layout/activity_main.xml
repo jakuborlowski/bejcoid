@@ -1,144 +1,17 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context=".MainActivity">
+<android.support.v4.view.ViewPager
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Znajomy"
-            android:id="@+id/textView3"
-            android:layout_alignParentTop="true"
-            android:layout_alignLeft="@+id/affiliateTextArea"/>
-
-    <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:inputType="textEmailAddress"
-            android:ems="10"
-            android:id="@+id/affiliateTextArea"
-            android:layout_below="@+id/textView3"
-            android:layout_alignParentLeft="true"
-            android:layout_toLeftOf="@+id/imageView"
-            android:minHeight="35dp"
-            android:maxWidth="35dp"/>
-
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Kwota"
-            android:id="@+id/textView4"
-            android:layout_below="@+id/horizontalScrollView"
-            android:layout_alignLeft="@+id/horizontalScrollView"/>
-
-    <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:inputType="numberDecimal"
-            android:ems="10"
-            android:id="@+id/amountTextArea"
-            android:layout_below="@+id/textView4"
-            android:layout_alignLeft="@+id/textView4"
-            android:layout_alignParentRight="true"
-            android:minHeight="35dp"
-            android:maxWidth="35dp"/>
-
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Opis"
-            android:id="@+id/textView5"
-            android:layout_below="@+id/amountTextArea"
-            android:layout_alignLeft="@+id/amountTextArea"/>
-
-    <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:inputType="textEmailAddress"
-            android:ems="10"
-            android:id="@+id/descriptionTextArea"
-            android:layout_below="@+id/textView5"
-            android:layout_alignRight="@+id/amountTextArea"
-            android:layout_alignParentLeft="true"
-            android:minHeight="35dp"
-            android:maxWidth="35dp"/>
-
-    <TableLayout
+    <android.support.v4.view.PagerTitleStrip
+            android:id="@+id/pager_title_strip"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:id="@+id/tableLayout">
+            android:layout_gravity="top"
+            android:background="#33b5e5"
+            android:textColor="#fff"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp" />
 
-        <TableRow
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent">
-
-            <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/heOwesMe"
-                    android:id="@+id/heOwesMeButton"
-                    android:background="#5ab45a"
-                    android:onClick="doAddDebt"
-                    android:layout_weight=".10"
-                    android:minHeight="48dp"
-                    android:enabled="true"
-                    />
-
-            <RelativeLayout
-                    android:layout_weight=".10"/>
-
-            <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/iOweHim"
-                    android:id="@+id/iOweHimButton"
-                    android:background="#d44944"
-                    android:textColor="#FFFFFF"
-                    android:textColorHighlight="#000000"
-                    android:onClick="doAddDebt"
-                    android:layout_weight=".10"
-                    android:minHeight="48dp"/>
-        </TableRow>
-
-
-    </TableLayout>
-
-    <HorizontalScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minHeight="50dp"
-            android:id="@+id/horizontalScrollView"
-            android:layout_below="@+id/affiliateTextArea"
-            android:layout_alignLeft="@+id/affiliateTextArea"
-            android:layout_gravity="center">
-        <LinearLayout
-                android:id="@+id/affiliates"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingRight="-5dp"/>
-    </HorizontalScrollView>
-
-    <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/imageView"
-            android:layout_alignParentEnd="false"
-            android:background="@drawable/address_book_blue"
-            android:onClick="doLaunchContactPicker"
-            android:layout_above="@+id/horizontalScrollView"
-            android:layout_alignParentRight="true"
-            android:layout_marginBottom="4px"/>
-
-
-</RelativeLayout>
+</android.support.v4.view.ViewPager>
