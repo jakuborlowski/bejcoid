@@ -10,12 +10,14 @@ import android.provider.ContactsContract;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,12 +26,15 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 public class MainActivity extends FragmentActivity {
 
     private static final int CONTACT_PICKER_RESULT = 1001;
 
     public List<String> affiliates;
+    public Map<String, String> balances;
+
     private Integer netActivity = 0;
 
     SectionsPagerAdapter mSectionsPagerAdapter;
@@ -51,6 +56,11 @@ public class MainActivity extends FragmentActivity {
 
     public void accessTokenReadyCallback() {
         new LoadAffiliatesTask(this).execute();
+        new LoadBalancesTask(this).execute();
+    }
+
+    public void addDebtCallback() {
+        new LoadBalancesTask(this).execute();
     }
 
     public void loadAffiliatesListCallback(List<String> affiliates) {
@@ -58,6 +68,14 @@ public class MainActivity extends FragmentActivity {
         ((LinearLayout) findViewById(R.id.affiliates)).removeAllViews();
         for (String affiliate : affiliates) {
             new DrawAffiliateTask(this).execute(affiliate);
+        }
+    }
+
+    public void loadBalancesListCallback(Map<String, String> balances) {
+        this.balances = balances;
+        ((LinearLayout) findViewById(R.id.balances)).removeAllViews();
+        for (String name : balances.keySet()) {
+            new DrawBalanceTask(this).execute(new Pair<String, String>(name, balances.get(name)));
         }
     }
 

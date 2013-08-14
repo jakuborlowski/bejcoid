@@ -79,6 +79,9 @@ public class AddDebtTask extends AsyncTask<JSONObject, Void, HttpResponse> {
             Log.e("bejc", e.getClass() + ": " + e.getMessage());
         }
 
+        // przeładowanie sald
+        activity.addDebtCallback();
+
         activity.unmarkNetActivity();
     }
 }
