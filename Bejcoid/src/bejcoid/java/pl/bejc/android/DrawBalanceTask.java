@@ -42,6 +42,7 @@ public class DrawBalanceTask extends AsyncTask<Pair<String, String>, Void, Linea
 
         LinearLayout linearLayout = new LinearLayout(activity.getApplicationContext());
         linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+        linearLayout.setPadding(4, 10, 10, 0);
 
         WebImageView imageView = new WebImageView(activity.getApplicationContext());
         imageView.setBackgroundColor(0xFFD0D0D0);
@@ -67,6 +68,7 @@ public class DrawBalanceTask extends AsyncTask<Pair<String, String>, Void, Linea
         LinearLayout linearLayout2 = new LinearLayout(activity.getApplicationContext());
         linearLayout2.setOrientation(LinearLayout.VERTICAL);
         linearLayout2.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT));
+        linearLayout2.setPadding(10, 0, 0, 0);
 
         TextView textView1 = new TextView(activity.getApplicationContext());
         textView1.setText(name);
@@ -75,6 +77,7 @@ public class DrawBalanceTask extends AsyncTask<Pair<String, String>, Void, Linea
         textView2.setGravity(Gravity.RIGHT);
         textView2.setText(balance);
         textView2.setTextColor(balance.charAt(0) == '-' ? Color.RED : Color.GREEN);
+        textView2.setTextSize(25);
 
         linearLayout2.addView(textView1);
         linearLayout2.addView(textView2);

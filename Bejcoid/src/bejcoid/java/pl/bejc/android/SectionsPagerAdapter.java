@@ -33,7 +33,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
             case 0:
                 return "Nowe zobowiązanie";
             case 1:
-                return "Znajomi";
+                return "Lista znajomych";
         }
         return null;
     }

@@ -6,5 +6,6 @@
     <string name="action_settings" >Zresetuj access_token</string>
     <string name="heOwesMe">Odda / Oddałem</string>
     <string name="iOweHim">Oddam / Oddał</string>
+    <string name="addressBook">address book</string>
 
 </resources>
